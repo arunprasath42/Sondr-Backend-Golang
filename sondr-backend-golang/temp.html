@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Verify your OTP</title>
+		<style>
+			body {
+				background: #191818;
+				font-family: 'Open Sans', sans-serif;
+				font-size: 14px;
+				margin: 0;
+				padding: 0;
+			}
+			.container {
+                background: #222222;
+                color: #797979;
+                border-radius: 5px;
+				width: 60%;
+				max-width: 600px;
+				margin: 0 auto;
+				padding: 20px;
+			}
+			.container h1 {
+				font-size: 24px;
+				font-weight: 400;
+				margin-bottom: 20px;
+			}
+			.container p {
+				font-size: 14px;
+				line-height: 1.5;
+				margin-bottom: 20px;
+			}
+	
+			.container input {
+				width: 25%;
+				padding: 10px;
+				border: 1px solid #ccc;
+				border-radius: 3px;
+				margin-bottom: 20px;
+			}
+			.container button {
+				width: 20%;
+				padding: 10px;
+				background-color: #0b43f9;
+				border: none;
+				border-radius: 3px;
+				color: #fff;
+				cursor: pointer;
+			}
+			.container button:hover {
+				background-color: #0b43f9;
+			}
+			.container button:disabled {
+				background-color: #ccc;
+				cursor: not-allowed;
+			}
+	
+			.container .error {
+				color: #ff0000;
+				font-weight: bold;
+				margin-bottom: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2>Dear user,</h2>
+			<p>We have received a request an OTP request on your mobile to update your phone number. Please enter the OTP below to verify your identity.</p>
+			<p><b>Note :</b> If you did not request for this, please ignore this email.</p>
+			<div class="container">
+				<form action="http://localhost:8080/api/v1/verfiyOtp" method="POST">
+                    <input type="hidden" name="PhoneNumber" value="` + phoneNo + `">
+					<input type="text" name="OTP" placeholder="OTP" required>
+					<button type="submit">Verify</button>
+				</form>
+			</div>
+			<script>
+				document.querySelector('form').addEventListener('submit', function(e) {
+					e.preventDefault();
+					var form = this;
+					var xhr = new XMLHttpRequest();
+					xhr.open('POST', form.action, true);
+					xhr.setRequestHeader('Content-Type', 'application/json');
+					xhr.onload = function() {
+						if (xhr.status === 200) {
+							window.location.href = 'http://localhost:8080/api/v1/updatePhoneNumber';
+						} else {
+							document.querySelector('.error').innerHTML = xhr.responseText;
+						}
+					};
+					xhr.send(JSON.stringify(serializeForm(form)));
+				});
+			</script>
+	
+			<p>If you have any queries, please contact us at <a href="mailto:fuzesondr@gmail.com">fuzesondr@gmail.com</a>.</p>
+			<p>Regards,<br>
+				<b>Team Sondr</b>
+			</p>
+	
+		</div>
+	</body>
+	<script>
+		document.querySelector('form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			var form = this;
+			var xhr = new XMLHttpRequest();
+			xhr.open(form.method, form.action, true);
+			xhr.send(new FormData(form));
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					alert(xhr.responseText);
+				}
+			};
+		});
+	</script>
+	
+	</html>
